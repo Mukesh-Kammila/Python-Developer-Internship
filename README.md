@@ -42,11 +42,6 @@ weather_dashboard/
 └── data_storage.py     # Local data storage
 ```
 
-### Installation:
-```bash
-pip install requests
-```
-
 ### Setup:
 1. Get a free API key from [OpenWeatherMap](https://openweathermap.org/api)
 2. Replace `'your_api_key_here'` in `main.py` with your actual API key
