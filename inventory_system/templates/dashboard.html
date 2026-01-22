@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-boxes"></i> Total Items</h5>
+                <h2>{{ total_items }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-tags"></i> Categories</h5>
+                <h2>{{ total_categories }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card stat-card">
+            <div class="card-body">
+                <h5 class="card-title"><i class="fas fa-map-marker-alt"></i> Locations</h5>
+                <h2>{{ total_locations }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-warning text-white">
+                <h5><i class="fas fa-exclamation-triangle"></i> Low Stock Alerts</h5>
+            </div>
+            <div class="card-body">
+                {% if low_stock_items %}
+                    <div class="list-group">
+                        {% for item in low_stock_items %}
+                        <div class="list-group-item low-stock">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ item.name }}</strong><br>
+                                    <small>{{ item.category.name }} - {{ item.location.name }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <span class="badge bg-warning text-dark">{{ item.quantity }} left</span><br>
+                                    <small>Min: {{ item.min_quantity }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No low stock items. All good! ✓</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-history"></i> Recent Transactions</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_transactions %}
+                    <div class="list-group">
+                        {% for transaction in recent_transactions %}
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>{{ transaction.item.name }}</strong><br>
+                                    <small>{{ transaction.transaction_type }} - {{ transaction.quantity }} units</small><br>
+                                    <small class="text-muted">By: {{ transaction.user.username }}</small>
+                                </div>
+                                <div class="text-end">
+                                    <small>{{ transaction.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No recent transactions.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5><i class="fas fa-info-circle"></i> Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{{ url_for('add_item') }}" class="btn btn-success me-2">
+                    <i class="fas fa-plus"></i> Add New Item
+                </a>
+                <a href="{{ url_for('items') }}" class="btn btn-primary me-2">
+                    <i class="fas fa-list"></i> View All Items
+                </a>
+                <a href="{{ url_for('reports') }}" class="btn btn-secondary">
+                    <i class="fas fa-chart-bar"></i> Generate Reports
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

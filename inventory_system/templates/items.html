@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block page_title %}Inventory Items{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <a href="{{ url_for('add_item') }}" class="btn btn-success">
+        <i class="fas fa-plus"></i> Add New Item
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Filter Items</h5>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="{{ url_for('items') }}" class="row g-3">
+            <div class="col-md-4">
+                <input type="text" class="form-control" name="search" placeholder="Search by name..." value="{{ request.args.get('search', '') }}">
+            </div>
+            <div class="col-md-3">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}" {% if request.args.get('category') == category.id|string %}selected{% endif %}>
+                        {{ category.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select name="location" class="form-select">
+                    <option value="">All Locations</option>
+                    {% for location in locations %}
+                    <option value="{{ location.id }}" {% if request.args.get('location') == location.id|string %}selected{% endif %}>
+                        {{ location.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search"></i> Filter
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        {% if items %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Category</th>
+                        <th>Location</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.name }}</strong><br>
+                            <small class="text-muted">{{ item.description[:50] }}...</small>
+                        </td>
+                        <td>{{ item.category.name }}</td>
+                        <td>{{ item.location.name }}</td>
+                        <td>
+                            <span class="badge {% if item.quantity <= item.min_quantity %}bg-warning text-dark{% else %}bg-success{% endif %}">
+                                {{ item.quantity }}
+                            </span>
+                        </td>
+                        <td>${{ "%.2f"|format(item.price) }}</td>
+                        <td>
+                            {% if item.quantity <= item.min_quantity %}
+                                <span class="badge bg-warning text-dark">Low Stock</span>
+                            {% else %}
+                                <span class="badge bg-success">In Stock</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url_for('item_detail', id=item.id) }}" class="btn btn-sm btn-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="{{ url_for('edit_item', id=item.id) }}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('add_transaction', item_id=item.id) }}" class="btn btn-sm btn-success">
+                                <i class="fas fa-exchange-alt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center py-5">No items found. Try adjusting your filters or add a new item.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

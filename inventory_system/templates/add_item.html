@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block page_title %}Add New Item{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5>Item Information</h5>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Item Name *</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="serial_number" class="form-label">Serial Number</label>
+                    <input type="text" class="form-control" id="serial_number" name="serial_number">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="category_id" class="form-label">Category *</label>
+                    <select class="form-select" id="category_id" name="category_id" required>
+                        <option value="">Select Category</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="location_id" class="form-label">Location *</label>
+                    <select class="form-select" id="location_id" name="location_id" required>
+                        <option value="">Select Location</option>
+                        {% for location in locations %}
+                        <option value="{{ location.id }}">{{ location.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="quantity" class="form-label">Quantity *</label>
+                    <input type="number" class="form-control" id="quantity" name="quantity" value="0" min="0" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="min_quantity" class="form-label">Minimum Quantity *</label>
+                    <input type="number" class="form-control" id="min_quantity" name="min_quantity" value="5" min="0" required>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="price" class="form-label">Price ($) *</label>
+                    <input type="number" class="form-control" id="price" name="price" step="0.01" value="0.00" min="0" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="purchase_date" class="form-label">Purchase Date</label>
+                <input type="date" class="form-control" id="purchase_date" name="purchase_date">
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('items') }}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-save"></i> Save Item
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
